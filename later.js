@@ -40,10 +40,10 @@ export function renderLater(root,state,app){
   loadAudio(box,state,app);
  }
 }
-function button(parent,label,handler){const b=document.createElement('button');b.className='puzzle-button';b.textContent=label;b.disabled=acting;b.onclick=handler;parent.append(b)}
+function button(parent,label,handler){const b=document.createElement('button');b.className='puzzle-button';b.textContent=label;b.onclick=handler;parent.append(b)}
 async function act(action,choice,state,app,root){if(acting)return;acting=true;const notice=root.querySelector('#laterNotice');try{
  const r=await fetch(app.apiBase+'/api/action',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({initData:app.tg.initData,action,choice}),signal:AbortSignal.timeout(20000)});const data=await r.json();
- if(!r.ok)throw Error(data.error||'Связь с E.V.A. прервана');chosen=[];app.applyState(data);
+ if(!r.ok)throw Error(data.error||'Связь с E.V.A. прервана');chosen=[];acting=false;app.applyState(data);
  }catch(e){if(notice)notice.textContent=e.message;else if(root.querySelector('#progressNumber')){root.querySelector('#progressNumber').textContent=e.message;timer=setTimeout(()=>{acting=false;act('processing','',state,app,root)},2500)}}finally{acting=false}}
 function clock(seconds){if(!Number.isFinite(seconds))return '0:00';const n=Math.floor(seconds);return `${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`}
 async function loadAudio(box,state,app){if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl='';
