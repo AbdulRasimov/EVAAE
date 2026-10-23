@@ -52,14 +52,12 @@ async function loadAudio(box,state,app){if(audioUrl)URL.revokeObjectURL(audioUrl
  holder.innerHTML='<div class="interview-player"><button type="button" class="interview-toggle" aria-label="Воспроизвести интервью">▶</button><button type="button" class="interview-back" aria-label="Назад на 10 секунд">↶ 10</button><div class="interview-display"><div class="interview-times"><span>0:00</span><span>0:00</span></div><input class="interview-seek" type="range" min="0" max="1000" value="0" aria-label="Перемотать интервью"></div></div>';
  const player=document.createElement('audio');player.preload='metadata';player.src=audioUrl;holder.append(player);
  const toggle=holder.querySelector('.interview-toggle'),back=holder.querySelector('.interview-back'),times=holder.querySelectorAll('.interview-times span'),seek=holder.querySelector('.interview-seek');
- const unrestricted=state.phase!=='audioReady';let furthest=0;
  const sync=()=>{times[0].textContent=clock(player.currentTime);times[1].textContent=clock(player.duration);const pct=Number.isFinite(player.duration)&&player.duration>0?Math.min(100,player.currentTime/player.duration*100):0;seek.value=String(Math.round(pct*10));seek.style.setProperty('--seek-progress',pct+'%');toggle.textContent=player.paused?'▶':'Ⅱ';toggle.setAttribute('aria-label',player.paused?'Воспроизвести интервью':'Пауза')};
- const remember=()=>{if(!unrestricted&&!player.paused&&!player.seeking&&player.currentTime<=furthest+2)furthest=Math.max(furthest,player.currentTime);sync()};
- const jump=time=>{if(!Number.isFinite(player.duration)||player.duration<=0)return;player.currentTime=Math.max(0,Math.min(player.duration,unrestricted?time:Math.min(time,furthest)));sync()};
+ const jump=time=>{if(!Number.isFinite(player.duration)||player.duration<=0)return;player.currentTime=Math.max(0,Math.min(player.duration,time));sync()};
  toggle.onclick=async()=>{if(player.paused){try{await player.play()}catch{box.querySelector('#audioStatus').textContent='Не удалось начать воспроизведение. Попробуй ещё раз.'}}else player.pause();sync()};
  back.onclick=()=>jump(player.currentTime-10);
  seek.oninput=()=>jump(player.duration*Number(seek.value)/1000);
- player.onloadedmetadata=sync;player.ontimeupdate=remember;player.onplay=sync;player.onpause=sync;
- let completed=false;player.onended=()=>{sync();if(state.phase==='audioReady'&&!completed&&furthest>=player.duration-2){completed=true;box.querySelector('#audioStatus').textContent='Интервью прослушано полностью. E.V.A. ответит через несколько секунд.';act('audio-ended','',state,app,document.getElementById('puzzleView'))}};
- box.querySelector('#audioStatus').textContent=state.phase==='audioReady'?'Запись готова. Уже прослушанный фрагмент можно перемотать назад.':'Запись доступна для повторного прослушивания и свободной перемотки.';
+ player.onloadedmetadata=sync;player.ontimeupdate=sync;player.onplay=sync;player.onpause=sync;
+ let completed=false;player.onended=()=>{sync();if(state.phase==='audioReady'&&!completed){completed=true;box.querySelector('#audioStatus').textContent='Запись достигла конца. E.V.A. ответит через несколько секунд.';act('audio-ended','',state,app,document.getElementById('puzzleView'))}};
+ box.querySelector('#audioStatus').textContent=state.phase==='audioReady'?'Запись готова. Можно перематывать вперёд и назад. E.V.A. ответит, когда воспроизведение достигнет конца.':'Запись доступна для повторного прослушивания и свободной перемотки.';
  }catch(e){box.querySelector('#audioStatus').textContent=e.message;button(box.querySelector('#audioHolder'),'Повторить загрузку',()=>{box.querySelector('#audioHolder').replaceChildren();loadAudio(box,state,app)})}}
