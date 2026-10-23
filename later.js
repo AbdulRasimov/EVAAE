@@ -10,9 +10,9 @@ export function renderLater(root,state,app){
  if(state.phase==='adminPuzzle'){
   box.innerHTML='<p class="puzzle-sub">Сравни список действующих файлов с резервным реестром. Найди запись, которой нет в официальном списке, затем найди её след в журнале.</p><section class="puzzle-card"><h3>Официальный реестр</h3><p>РЕЗЕРВ-365 · A365-R/16<br>СЛЕДЫ ПРОШЛОГО · A365-R/18<br>ОБЩИЕ ВОСПОМИНАНИЯ · A365-R/19</p><h3>Резервная копия E.V.A.</h3><p>A365-R/16 · A365-R/17 · A365-R/18 · A365-R/19</p><div id="adminOptions"></div><p class="puzzle-notice" id="laterNotice"></p></section>';
   const options=state.adminStep===0?['A365-R/16','A365-R/17','A365-R/18','A365-R/19']:['EV-LOG/07','EV-LOG/08','EV-LOG/09','EV-LOG/10'];
-  if(state.adminStep===1)box.querySelector('#adminOptions').insertAdjacentHTML('beforebegin','<h3>Журнал доступа к A365-R/17</h3><p>Одна из строк относится к скрытому каталогу. Сопоставь идентификатор файла и резервный журнал E.V.A.</p>');
+  if(state.adminStep===1)box.querySelector('#adminOptions').insertAdjacentHTML('beforebegin','<h3>Фрагмент журнала доступа</h3><p>В резервной копии появился отсутствующий в официальном реестре файл A365-R/17. Найди запись журнала, которая обращалась именно к нему:</p><p>EV-LOG/07 → A365-R/16<br>EV-LOG/08 → A365-R/18<br>EV-LOG/09 → A365-R/17<br>EV-LOG/10 → A365-R/19</p>');
   options.forEach(o=>button(box.querySelector('#adminOptions'),o,()=>act('admin',o,state,app,root)));
-  if(state.adminErrors>=3)box.querySelector('#laterNotice').textContent=state.adminStep===0?'Подсказка: ищи номер между 16 и 18.':'Подсказка: нужная строка журнала заканчивается на 09.';
+  if(state.adminErrors>=3)box.querySelector('#laterNotice').textContent=state.adminStep===0?'Подсказка: ищи номер между 16 и 18.':'Подсказка: сопоставь номер файла в каждой строке журнала с A365-R/17.';
  }else if(state.phase==='doctorReveal'||state.phase==='doctorReaction'){
   box.innerHTML='<div class="puzzle-lock">'+(state.phase==='doctorReveal'?'Скрытый каталог восстановлен. Открой запись в чате E.V.A.':'E.V.A. анализирует разговор сотрудников. Продолжение появится в чате.')+'</div>';
  }else if(state.phase==='keyPuzzle'){
