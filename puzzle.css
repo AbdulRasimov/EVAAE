@@ -16,7 +16,9 @@
 .interview-toggle{flex:none;width:48px;height:48px;border:1px solid #b5c8e090;border-radius:50%;background:#43618c;color:white;font-size:22px;cursor:pointer}
 .interview-toggle:focus-visible{outline:2px solid #e6bbef;outline-offset:3px}
 .interview-display{min-width:0;flex:1}.interview-times{display:flex;justify-content:space-between;color:#c6d8ee;font-size:13px;font-variant-numeric:tabular-nums;margin-bottom:9px}
-.interview-track{height:6px;border-radius:99px;background:#53678166;overflow:hidden}.interview-track span{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8bc5dd,#d2a8e9);transition:width .2s linear}
+.interview-back{flex:none;min-width:48px;height:40px;border:1px solid #8399b8;border-radius:10px;background:#293d59;color:#f4e6f5;font-size:13px;font-weight:700;touch-action:manipulation}
+.interview-seek{display:block;width:100%;height:24px;margin:0;accent-color:#d7a6e7;cursor:pointer;touch-action:none;background:transparent}
+.interview-seek:focus-visible,.interview-back:focus-visible{outline:2px solid #dfb7ee;outline-offset:3px}
 .transcript-listen{display:block;margin:4px 0 22px;padding:10px 16px;border:1px solid #91add2;border-radius:10px;background:#354f74;color:#f4f7ff;font-weight:650}
 .transcript-listen:focus-visible{outline:2px solid #dfb7ee;outline-offset:3px}
 @media(max-width:430px){.sheethead h2{font-size:16px}.sheethead .close{white-space:nowrap;font-size:13px}}
